@@ -1,25 +1,66 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
 import './App.css';
+import PlayersList from './components/PlayersList/PlayersList';
+import AddPlayer from './components/AddPlayer/AddPlayer';
 
 class App extends Component {
+  constructor() {
+    super();
+
+    this.state = {
+      players: []
+    }
+  }
+
+  onScoreUpdate = (playerIndex, scoreChange) => {
+    let  newPlayers= this.state.players.map((player, index) => {
+      if (index === playerIndex) {
+        return { ...player, score: player.score + scoreChange };
+      }
+      return player;
+    })
+    let sort = newPlayers.sort(this.compare);
+    this.setState({
+      players: sort
+    })
+  }
+  
+  compare = (a, b) => {
+    const scoreA = a.score;
+    const scoreB = b.score;
+    let comparison = 0;
+    if (scoreA > scoreB) {
+      comparison = -1;
+    } else if (scoreA < scoreB) {
+      comparison = 1;
+    }
+    return comparison;
+  }
+  
+  onPlayerAdd = (playerName) => {
+    const newPlayer = {
+      name: playerName,
+      score: 0,
+    }
+    this.setState({
+      players: [...this.state.players, newPlayer]
+    })
+  }
+  
+  onPlayerRemove = (i) => {
+    const newPlayers = this.state.players.filter(player => player.name !== this.state.players[i].name);
+    let sort = newPlayers.sort(this.compare);
+    this.setState({
+      players: sort
+    })
+  }
+  
   render() {
     return (
       <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <p>
-            Edit <code>src/App.js</code> and save to reload.
-          </p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-          </a>
-        </header>
+        <h1 className ="headline">Player Table</h1>
+        <AddPlayer onPlayerAdd={this.onPlayerAdd} className = "AddPlayer" />
+        <PlayersList players={this.state.players} onScoreUpdate={this.onScoreUpdate} onPlayerRemove={this.onPlayerRemove} />
       </div>
     );
   }

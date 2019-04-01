@@ -1,0 +1,16 @@
+
+.PlayersList {
+    margin-top: 40px;
+    padding: 0;
+}
+
+.PlayersList li {
+    list-style-type: none;
+}
+
+.playerName, .playerPoints {
+    font-size: 1.3em;
+    color: #777777;
+    margin-right: 100px;
+    font-weight: 700;
+} 
